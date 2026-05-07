@@ -42,19 +42,25 @@ public class AnalyticsServiceImpl extends AnalyticsServiceGrpc.AnalyticsServiceI
 
     @Override
     public void getSearchAnalytics(AnalyticsRequest request, StreamObserver<AnalyticsResponse> responseObserver) {
-        responseObserver.onNext(AnalyticsResponse.newBuilder().build());
+        responseObserver.onNext(AnalyticsResponse.newBuilder()
+                .setMetricsJson(service.getSearchAnalytics(request.getTimeRange()))
+                .build());
         responseObserver.onCompleted();
     }
 
     @Override
     public void getUserEngagement(EngagementRequest request, StreamObserver<EngagementResponse> responseObserver) {
-        responseObserver.onNext(EngagementResponse.newBuilder().build());
+        responseObserver.onNext(EngagementResponse.newBuilder()
+                .setEngagementScore(service.getUserEngagement(request.getUserId()))
+                .build());
         responseObserver.onCompleted();
     }
 
     @Override
     public void getContentPerformance(PerformanceRequest request, StreamObserver<PerformanceResponse> responseObserver) {
-        responseObserver.onNext(PerformanceResponse.newBuilder().build());
+        responseObserver.onNext(PerformanceResponse.newBuilder()
+                .setPerformanceMetricsJson(service.getContentPerformance(request.getDocumentId()))
+                .build());
         responseObserver.onCompleted();
     }
 }

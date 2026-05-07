@@ -106,15 +106,9 @@ message SearchDetailResponse {
 // Module 3: Ranking
 // ==========================================
 service RankingService {
-    rpc CalculateRelevanceScore(RankingRequest) returns (RankingResponse);
     rpc BoostResults(BoostRequest) returns (RankingResponse);
     rpc ApplyRankingModel(RankingModelRequest) returns (RankingResponse);
     rpc PersonalizeRanking(PersonalizeRankingRequest) returns (RankingResponse);
-}
-
-message RankingRequest {
-    string query = 1;
-    string document_id = 2;
 }
 
 message BoostRequest {

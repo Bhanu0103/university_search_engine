@@ -11,4 +11,7 @@ public interface AnalyticsRepository extends JpaRepository<AnalyticsEntity, Long
 
     @Query("SELECT a.queryText FROM AnalyticsEntity a ORDER BY a.count DESC")
     List<String> findTopQueries();
+
+    @Query("SELECT a FROM AnalyticsEntity a ORDER BY a.count DESC")
+    List<AnalyticsEntity> findTopAnalytics();
 }
