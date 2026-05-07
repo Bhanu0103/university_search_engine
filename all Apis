@@ -243,6 +243,7 @@ AnalyticsService
 
 {
   "GetSearchAnalytics": {
+
     "timeRange": "last_7_days"
   },
   "GetPopularQueries": {
