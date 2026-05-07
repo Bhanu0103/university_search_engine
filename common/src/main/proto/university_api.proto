@@ -1,0 +1,510 @@
+syntax = "proto3";
+
+package com.university.grpc;
+
+option java_multiple_files = true;
+option java_package = "com.university.grpc";
+option java_outer_classname = "UniversityApiProto";
+
+// ==========================================
+// Generic Messages
+// ==========================================
+message Empty {}
+
+message StatusResponse {
+    bool success = 1;
+    string message = 2;
+}
+
+// ==========================================
+// Module 1: Ingest
+// ==========================================
+service IngestService {
+    rpc IngestDocuments(IngestRequest) returns (StatusResponse);
+    rpc IndexCourses(IngestRequest) returns (StatusResponse);
+    rpc IndexFacultyProfiles(IngestRequest) returns (StatusResponse);
+    rpc IndexResearchPapers(IngestRequest) returns (StatusResponse);
+    rpc UpdateIndex(UpdateRequest) returns (StatusResponse);
+    rpc DeleteFromIndex(DeleteRequest) returns (StatusResponse);
+}
+
+message IngestRequest {
+    string title = 1;
+    string university = 2;
+    string content = 3;
+    string location = 4;
+    double ranking = 5;
+    string department = 6;
+}
+
+message UpdateRequest {
+    string id = 1;
+    string updated_json = 2;
+}
+
+message DeleteRequest {
+    string id = 1;
+}
+
+// ==========================================
+// Module 2: Search
+// ==========================================
+service SearchService {
+    rpc ExecuteSearch(SearchRequest) returns (SearchResponse);
+    rpc AdvancedSearch(AdvancedSearchRequest) returns (SearchResponse);
+    rpc FilterSearchResults(FilterRequest) returns (SearchResponse);
+    rpc PaginateResults(PaginationRequest) returns (SearchResponse);
+    rpc GetSearchById(SearchIdRequest) returns (SearchDetailResponse);
+}
+
+message SearchRequest {
+    string query = 1;
+    string user_id = 2;
+}
+
+message AdvancedSearchRequest {
+    string query = 1;
+    repeated string fields = 2;
+}
+
+message FilterRequest {
+    string query = 1;
+    string department = 2;
+    string location = 3;
+}
+
+message PaginationRequest {
+    string query = 1;
+    int32 page = 2;
+    int32 size = 3;
+}
+
+message SearchIdRequest {
+    string id = 1;
+}
+
+message SearchResponse {
+    repeated DocumentResponse results = 1;
+    int32 total_hits = 2;
+}
+
+message DocumentResponse {
+    string id = 1;
+    string title = 2;
+    string university = 3;
+    string content = 4;
+    string location = 5;
+    double ranking = 6;
+    string department = 7;
+}
+
+message SearchDetailResponse {
+    DocumentResponse document = 1;
+}
+
+// ==========================================
+// Module 3: Ranking
+// ==========================================
+service RankingService {
+    rpc CalculateRelevanceScore(RankingRequest) returns (RankingResponse);
+    rpc BoostResults(BoostRequest) returns (RankingResponse);
+    rpc ApplyRankingModel(RankingModelRequest) returns (RankingResponse);
+    rpc PersonalizeRanking(PersonalizeRankingRequest) returns (RankingResponse);
+}
+
+message RankingRequest {
+    string query = 1;
+    string document_id = 2;
+}
+
+message BoostRequest {
+    repeated string document_ids = 1;
+    string boost_factor = 2;
+}
+
+message RankingModelRequest {
+    string model_name = 1;
+}
+
+message PersonalizeRankingRequest {
+    string user_id = 1;
+    repeated string document_ids = 2;
+}
+
+message RankingResponse {
+    map<string, double> scores = 1;
+}
+
+// ==========================================
+// Module 4: Filter
+// ==========================================
+service FilterService {
+    rpc ApplyFilters(FilterRequest) returns (FilterResponse);
+    rpc GetFacetCounts(FacetRequest) returns (FacetResponse);
+    rpc RefineSearch(RefineRequest) returns (FilterResponse);
+    rpc CombineFilters(CombineFilterRequest) returns (FilterResponse);
+}
+
+message FacetRequest {
+    string query = 1;
+    repeated string facet_fields = 2;
+}
+
+message FacetResponse {
+    map<string, int32> counts = 1;
+}
+
+message RefineRequest {
+    string query = 1;
+    string refine_token = 2;
+}
+
+message CombineFilterRequest {
+    repeated string filter_ids = 1;
+}
+
+message FilterResponse {
+    repeated DocumentResponse results = 1;
+    int32 total_hits = 2;
+}
+
+// ==========================================
+// Module 5: Personalization
+// ==========================================
+service PersonalizationService {
+    rpc TrackUserSearch(TrackEventRequest) returns (StatusResponse);
+    rpc BuildUserProfile(UserProfileRequest) returns (StatusResponse);
+    rpc RecommendContent(RecommendationRequest) returns (RecommendationResponse);
+    rpc GetPersonalizedResults(PersonalizedResultRequest) returns (RecommendationResponse);
+}
+
+message TrackEventRequest {
+    string user_id = 1;
+    string event_json = 2;
+}
+
+message UserProfileRequest {
+    string user_id = 1;
+}
+
+message RecommendationRequest {
+    string user_id = 1;
+}
+
+message PersonalizedResultRequest {
+    string user_id = 1;
+    string query = 2;
+}
+
+message RecommendationResponse {
+    repeated DocumentResponse results = 1;
+}
+
+// ==========================================
+// Module 6: Document
+// ==========================================
+service DocumentService {
+    rpc UploadDocument(DocumentUploadRequest) returns (StatusResponse);
+    rpc UpdateMetadata(MetadataUpdateRequest) returns (StatusResponse);
+    rpc TagDocument(TagRequest) returns (StatusResponse);
+    rpc ClassifyDocument(ClassifyRequest) returns (StatusResponse);
+    rpc GetDocumentDetails(DocumentIdRequest) returns (DocumentDataResponse);
+}
+
+message DocumentUploadRequest {
+    string content = 1;
+    string metadata_json = 2;
+}
+
+message MetadataUpdateRequest {
+    string document_id = 1;
+    string metadata_json = 2;
+}
+
+message TagRequest {
+    string document_id = 1;
+    repeated string tags = 2;
+}
+
+message ClassifyRequest {
+    string document_id = 1;
+}
+
+message DocumentIdRequest {
+    string document_id = 1;
+}
+
+message DocumentDataResponse {
+    string document_json = 1;
+}
+
+// ==========================================
+// Module 7: Access Control
+// ==========================================
+service AccessControlService {
+    rpc DefineAccessPolicy(PolicyRequest) returns (StatusResponse);
+    rpc AssignPermissions(PermissionRequest) returns (StatusResponse);
+    rpc ValidateAccess(AccessValidationRequest) returns (AccessValidationResponse);
+    rpc RevokeAccess(RevokeRequest) returns (StatusResponse);
+}
+
+message PolicyRequest {
+    string policy_json = 1;
+}
+
+message PermissionRequest {
+    string user_id = 1;
+    repeated string roles = 2;
+}
+
+message AccessValidationRequest {
+    string user_id = 1;
+    string resource_id = 2;
+    string action = 3;
+}
+
+message AccessValidationResponse {
+    bool is_allowed = 1;
+}
+
+message RevokeRequest {
+    string user_id = 1;
+    string role = 2;
+}
+
+// ==========================================
+// Module 8: Query Optimization
+// ==========================================
+service QueryOptimizationService {
+    rpc SuggestQuery(SuggestionRequest) returns (SuggestionResponse);
+    rpc AutoComplete(AutoCompleteRequest) returns (AutoCompleteResponse);
+    rpc CorrectSpelling(SpellingRequest) returns (SpellingResponse);
+    rpc ExpandQuery(ExpansionRequest) returns (ExpansionResponse);
+}
+
+message SuggestionRequest {
+    string partial_query = 1;
+}
+
+message SuggestionResponse {
+    repeated string suggestions = 1;
+}
+
+message AutoCompleteRequest {
+    string prefix = 1;
+}
+
+message AutoCompleteResponse {
+    repeated string completions = 1;
+}
+
+message SpellingRequest {
+    string wrong_query = 1;
+}
+
+message SpellingResponse {
+    string corrected_query = 1;
+}
+
+message ExpansionRequest {
+    string base_query = 1;
+}
+
+message ExpansionResponse {
+    repeated string expanded_queries = 1;
+}
+
+// ==========================================
+// Module 9: Notification
+// ==========================================
+service NotificationService {
+    rpc LogSearchEvent(LogRequest) returns (StatusResponse);
+    rpc SendSearchAlert(AlertRequest) returns (StatusResponse);
+    rpc NotifyNewContent(NewContentRequest) returns (StatusResponse);
+    rpc GetNotifications(NotificationListRequest) returns (NotificationListResponse);
+}
+
+message LogRequest {
+    string user_id = 1;
+    string query = 2;
+}
+
+message AlertRequest {
+    string user_id = 1;
+    string alert_message = 2;
+}
+
+message NewContentRequest {
+    string document_id = 1;
+}
+
+message NotificationListRequest {
+    string user_id = 1;
+}
+
+message NotificationListResponse {
+    repeated string notifications = 1;
+}
+
+// ==========================================
+// Module 10: Abuse Detection
+// ==========================================
+service AbuseDetectionService {
+    rpc DetectSearchAbuse(AbuseCheckRequest) returns (AbuseCheckResponse);
+    rpc AnalyzeQueryPatterns(PatternRequest) returns (PatternResponse);
+    rpc FlagSuspiciousUsers(FlagRequest) returns (StatusResponse);
+    rpc GetFraudReports(ReportRequest) returns (ReportResponse);
+}
+
+message AbuseCheckRequest {
+    string user_id = 1;
+    string ip_address = 2;
+}
+
+message AbuseCheckResponse {
+    bool is_abusive = 1;
+    string reason = 2;
+}
+
+message PatternRequest {
+    string time_range = 1;
+}
+
+message PatternResponse {
+    string pattern_analysis_json = 1;
+}
+
+message FlagRequest {
+    string user_id = 1;
+    string reason = 2;
+}
+
+message ReportRequest {
+    string start_date = 1;
+    string end_date = 2;
+}
+
+message ReportResponse {
+    repeated string reports = 1;
+}
+
+// ==========================================
+// Module 11: Auth
+// ==========================================
+service AuthService {
+    rpc Login(LoginRequest) returns (TokenResponse);
+    rpc Register(RegisterRequest) returns (StatusResponse);
+    rpc ValidateToken(TokenValidationRequest) returns (ValidationResponse);
+    rpc RefreshToken(RefreshTokenRequest) returns (TokenResponse);
+    rpc Logout(LogoutRequest) returns (StatusResponse);
+}
+
+message LoginRequest {
+    string email = 1;
+    string password = 2;
+}
+
+message RegisterRequest {
+    string username = 1;
+    string password = 2;
+    string email = 3;
+    string role = 4;
+}
+
+message TokenValidationRequest {
+    string token = 1;
+}
+
+message ValidationResponse {
+    bool is_valid = 1;
+    string user_id = 2;
+    string role = 3;
+}
+
+message RefreshTokenRequest {
+    string refresh_token = 1;
+}
+
+message TokenResponse {
+    string access_token = 1;
+    string refresh_token = 2;
+}
+
+message LogoutRequest {
+    string token = 1;
+}
+
+// ==========================================
+// Module 12: Analytics
+// ==========================================
+service AnalyticsService {
+    rpc GetSearchAnalytics(AnalyticsRequest) returns (AnalyticsResponse);
+    rpc GetPopularQueries(PopularityRequest) returns (PopularityResponse);
+    rpc GetUserEngagement(EngagementRequest) returns (EngagementResponse);
+    rpc GetContentPerformance(PerformanceRequest) returns (PerformanceResponse);
+}
+
+message AnalyticsRequest {
+    string time_range = 1;
+}
+
+message AnalyticsResponse {
+    string metrics_json = 1;
+}
+
+message PopularityRequest {
+    int32 top_n = 1;
+}
+
+message PopularityResponse {
+    repeated string queries = 1;
+}
+
+message EngagementRequest {
+    string user_id = 1;
+}
+
+message EngagementResponse {
+    string engagement_score = 1;
+}
+
+message PerformanceRequest {
+    string document_id = 1;
+}
+
+message PerformanceResponse {
+    string performance_metrics_json = 1;
+}
+
+// ==========================================
+// Module 13: Prediction
+// ==========================================
+service PredictionService {
+    rpc ForecastSearchTrends(ForecastRequest) returns (ForecastResponse);
+    rpc RecommendContentOptimization(OptimizationRequest) returns (OptimizationResponse);
+    rpc AnalyzeUsagePatterns(UsagePatternRequest) returns (UsagePatternResponse);
+}
+
+message ForecastRequest {
+    string time_range = 1;
+}
+
+message ForecastResponse {
+    string trend_data_json = 1;
+}
+
+message OptimizationRequest {
+    string document_id = 1;
+}
+
+message OptimizationResponse {
+    string optimization_suggestions = 1;
+}
+
+message UsagePatternRequest {
+    string user_id = 1;
+}
+
+message UsagePatternResponse {
+    string usage_insights = 1;
+}

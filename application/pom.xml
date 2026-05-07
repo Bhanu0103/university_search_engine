@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.university</groupId>
+        <artifactId>university-search-system</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>application</artifactId>
+
+    <dependencies>
+        <!-- Include all modules -->
+        <dependency><groupId>com.university</groupId><artifactId>ingest-module</artifactId><version>${project.version}</version></dependency>
+        <dependency><groupId>com.university</groupId><artifactId>search-module</artifactId><version>${project.version}</version></dependency>
+        <dependency><groupId>com.university</groupId><artifactId>ranking-module</artifactId><version>${project.version}</version></dependency>
+        <dependency><groupId>com.university</groupId><artifactId>filter-module</artifactId><version>${project.version}</version></dependency>
+        <dependency><groupId>com.university</groupId><artifactId>personalization-module</artifactId><version>${project.version}</version></dependency>
+        <dependency><groupId>com.university</groupId><artifactId>document-module</artifactId><version>${project.version}</version></dependency>
+        <dependency><groupId>com.university</groupId><artifactId>access-control-module</artifactId><version>${project.version}</version></dependency>
+        <dependency><groupId>com.university</groupId><artifactId>query-optimization-module</artifactId><version>${project.version}</version></dependency>
+        <dependency><groupId>com.university</groupId><artifactId>notification-module</artifactId><version>${project.version}</version></dependency>
+        <dependency><groupId>com.university</groupId><artifactId>abuse-detection-module</artifactId><version>${project.version}</version></dependency>
+        <dependency><groupId>com.university</groupId><artifactId>auth-module</artifactId><version>${project.version}</version></dependency>
+        <dependency><groupId>com.university</groupId><artifactId>analytics-module</artifactId><version>${project.version}</version></dependency>
+        <dependency><groupId>com.university</groupId><artifactId>prediction-module</artifactId><version>${project.version}</version></dependency>
+        
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+</project>

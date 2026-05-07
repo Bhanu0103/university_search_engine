@@ -1,0 +1,30 @@
+server:
+  port: 8081 # Web Server (REST / Health Checks)
+
+spring:
+  application:
+    name: university-search-system
+  datasource:
+    url: jdbc:mysql://localhost:3306/university_search?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update # Safety: Changed back to update so you don't lose your data!
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+
+grpc:
+  server:
+    port: 9090 # gRPC Server (Strictly for Service communication)
+    security:
+      enabled: false
+
+university:
+  auth:
+    jwt:
+      secret: hackathon-super-secret-key-for-university-2024
+      expiration-ms: 3600000
