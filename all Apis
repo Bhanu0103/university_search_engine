@@ -1,0 +1,270 @@
+{
+  "IngestDocuments": {
+    "title": "Computer Science Program",
+    "university": "Stanford University",
+    "content": "A top-ranked computer science program with AI and systems research.",
+    "location": "California",
+    "ranking": 2.0,
+    "department": "Computer Science"
+  },
+  "IndexCourses": {
+    "title": "Data Structures and Algorithms",
+    "university": "MIT",
+    "content": "Core undergraduate course covering algorithms, complexity, trees, graphs, and hashing.",
+    "location": "Massachusetts",
+    "ranking": 1.0,
+    "department": "Courses"
+  },
+  "IndexFacultyProfiles": {
+    "title": "Prof. Jane Smith",
+    "university": "Harvard University",
+    "content": "Faculty profile for machine learning and natural language processing research.",
+    "location": "Massachusetts",
+    "ranking": 3.0,
+    "department": "Faculty"
+  },
+  "IndexResearchPapers": {
+    "title": "Efficient Neural Search for Academic Discovery",
+    "university": "Carnegie Mellon University",
+    "content": "Research paper about semantic search over university documents.",
+    "location": "Pennsylvania",
+    "ranking": 5.0,
+    "department": "Research"
+  },
+  "UpdateIndex": {
+    "id": "1",
+    "updatedJson": "{\"title\":\"Updated CS Program\",\"university\":\"Stanford University\",\"content\":\"Updated program description\",\"location\":\"California\",\"ranking\":2.5,\"department\":\"Computer Science\"}"
+  },
+  "DeleteFromIndex": {
+    "id": "1"
+  }
+}
+SearchService
+
+{
+  "ExecuteSearch": {
+    "query": "computer science",
+    "userId": "user-101"
+  },
+  "AdvancedSearch": {
+    "query": "machine learning",
+    "fields": ["title", "content", "department"]
+  },
+  "FilterSearchResults": {
+    "query": "engineering",
+    "department": "Computer Science",
+    "location": "California"
+  },
+  "PaginateResults": {
+    "query": "university",
+    "page": 0,
+    "size": 10
+  },
+  "GetSearchById": {
+    "id": "1"
+  }
+}
+RankingService
+
+{
+  "CalculateRelevanceScore": {
+    "query": "artificial intelligence",
+    "documentId": "1"
+  },
+  "BoostResults": {
+    "documentIds": ["1", "2", "3"],
+    "boostFactor": "1.25"
+  },
+  "ApplyRankingModel": {
+    "modelName": "default-relevance-model"
+  },
+  "PersonalizeRanking": {
+    "userId": "user-101",
+    "documentIds": ["1", "2", "3"]
+  }
+}
+FilterService
+
+{
+  "ApplyFilters": {
+    "query": "science",
+    "department": "Computer Science",
+    "location": "California"
+  },
+  "GetFacetCounts": {
+    "query": "engineering",
+    "facetFields": ["department", "location", "university"]
+  },
+  "RefineSearch": {
+    "query": "data science",
+    "refineToken": "California"
+  },
+  "CombineFilters": {
+    "filterIds": ["Computer Science", "California", "Stanford"]
+  }
+}
+PersonalizationService
+
+{
+  "TrackUserSearch": {
+    "userId": "user-101",
+    "eventJson": "{\"query\":\"machine learning\",\"clickedDocumentId\":\"2\",\"timestamp\":\"2026-05-07T10:30:00Z\"}"
+  },
+  "BuildUserProfile": {
+    "userId": "user-101"
+  },
+  "RecommendContent": {
+    "userId": "user-101"
+  },
+  "GetPersonalizedResults": {
+    "userId": "user-101",
+    "query": "AI research"
+  }
+}
+DocumentService
+
+{
+  "UploadDocument": {
+    "content": "This document describes the university admission process and course offerings.",
+    "metadataJson": "{\"title\":\"Admissions Guide\",\"university\":\"MIT\",\"department\":\"Admissions\",\"location\":\"Massachusetts\"}"
+  },
+  "UpdateMetadata": {
+    "documentId": "1",
+    "metadataJson": "{\"title\":\"Updated Admissions Guide\",\"department\":\"Admissions\",\"tags\":[\"admission\",\"guide\"]}"
+  },
+  "TagDocument": {
+    "documentId": "1",
+    "tags": ["admission", "engineering", "graduate"]
+  },
+  "ClassifyDocument": {
+    "documentId": "1"
+  },
+  "GetDocumentDetails": {
+    "documentId": "1"
+  }
+}
+AccessControlService
+
+{
+  "DefineAccessPolicy": {
+    "policyJson": "{\"resource\":\"document\",\"actions\":[\"read\",\"write\"],\"roles\":[\"ADMIN\",\"FACULTY\"]}"
+  },
+  "AssignPermissions": {
+    "userId": "user-101",
+    "roles": ["STUDENT", "RESEARCHER"]
+  },
+  "ValidateAccess": {
+    "userId": "user-101",
+    "resourceId": "document-1",
+    "action": "read"
+  },
+  "RevokeAccess": {
+    "userId": "user-101",
+    "role": "RESEARCHER"
+  }
+}
+QueryOptimizationService
+
+{
+  "SuggestQuery": {
+    "partialQuery": "comp sci"
+  },
+  "AutoComplete": {
+    "prefix": "mach"
+  },
+  "CorrectSpelling": {
+    "wrongQuery": "artifical inteligence"
+  },
+  "ExpandQuery": {
+    "baseQuery": "AI"
+  }
+}
+NotificationService
+
+{
+  "LogSearchEvent": {
+    "userId": "user-101",
+    "query": "computer science universities"
+  },
+  "SendSearchAlert": {
+    "userId": "user-101",
+    "alertMessage": "New results found for your saved search."
+  },
+  "NotifyNewContent": {
+    "documentId": "1"
+  },
+  "GetNotifications": {
+    "userId": "user-101"
+  }
+}
+AbuseDetectionService
+
+{
+  "DetectSearchAbuse": {
+    "userId": "user-101",
+    "ipAddress": "192.168.1.25"
+  },
+  "AnalyzeQueryPatterns": {
+    "timeRange": "last_24_hours"
+  },
+  "FlagSuspiciousUsers": {
+    "userId": "user-999",
+    "reason": "Too many repeated requests from same IP"
+  },
+  "GetFraudReports": {
+    "startDate": "2026-05-01",
+    "endDate": "2026-05-07"
+  }
+}
+AuthService
+
+{
+  "Login": {
+    "email": "student@example.com",
+    "password": "Password123!"
+  },
+  "Register": {
+    "username": "student101",
+    "password": "Password123!",
+    "email": "student101@example.com",
+    "role": "STUDENT"
+  },
+  "ValidateToken": {
+    "token": "dummy-access-token"
+  },
+  "RefreshToken": {
+    "refreshToken": "dummy-refresh-token"
+  },
+  "Logout": {
+    "token": "dummy-access-token"
+  }
+}
+AnalyticsService
+
+{
+  "GetSearchAnalytics": {
+    "timeRange": "last_7_days"
+  },
+  "GetPopularQueries": {
+    "topN": 5
+  },
+  "GetUserEngagement": {
+    "userId": "user-101"
+  },
+  "GetContentPerformance": {
+    "documentId": "1"
+  }
+}
+PredictionService
+
+{
+  "ForecastSearchTrends": {
+    "timeRange": "next_30_days"
+  },
+  "RecommendContentOptimization": {
+    "documentId": "1"
+  },
+  "AnalyzeUsagePatterns": {
+    "userId": "user-101"
+  }
+}
