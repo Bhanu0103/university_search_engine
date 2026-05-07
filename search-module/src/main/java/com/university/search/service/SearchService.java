@@ -37,7 +37,7 @@ public class SearchService {
     public List<DocumentEntity> search(String query) {
         // 1. Check for Abuse FIRST
         if (abuseDetectionService.isAbusive(query)) {
-            notificationService.sendAlert("⚠️ SECURITY ALERT: Abusive search attempt blocked!");
+            notificationService.sendAlert("⚠️ SECURITY ALERT: Abusive search is attempt blocked!");
             return new ArrayList<>();
         }
 
