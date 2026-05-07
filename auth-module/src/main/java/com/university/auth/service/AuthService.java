@@ -21,7 +21,7 @@ public class AuthService {
 
     public String authenticate(AuthRecord record) {
         UserEntity user = userRepository.findByEmail(record.email())
-                .orElseThrow(() -> new RuntimeException("Authentication failed: User not found with email " + record.email()));
+                .orElseThrow(() -> new RuntimeException("Authentication is failed: User not found with email " + record.email()));
 
         if (passwordEncoder.matches(record.password(), user.getPassword())) {
             return jwtService.generateToken(user.getEmail());
