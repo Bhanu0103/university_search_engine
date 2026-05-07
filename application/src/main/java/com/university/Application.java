@@ -16,7 +16,7 @@ public class Application {
         SpringApplication.run(Application.class, args);
         System.out.println("==================================================");
         System.out.println("University Search Backend System Started Successfully!");
-        System.out.println("Modular Monolith Workflow: All 13 modules loaded.");
+        System.out.println("Modular Monolith Workflow: All 13 modules are loaded.");
         System.out.println("gRPC Server is listening for requests...");
         System.out.println("==================================================");
     }
