@@ -9,9 +9,12 @@ import com.university.ingest.dto.IngestRequestRecord;
 import com.university.ingest.service.IngestService;
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.server.service.GrpcService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @GrpcService
 public class IngestServiceImpl extends IngestServiceGrpc.IngestServiceImplBase {
+    private static final Logger logger = LoggerFactory.getLogger(IngestServiceImpl.class);
 
     private final IngestService service;
 
@@ -22,10 +25,7 @@ public class IngestServiceImpl extends IngestServiceGrpc.IngestServiceImplBase {
     @Override
     public void ingestDocuments(IngestRequest request, StreamObserver<StatusResponse> responseObserver) {
         try {
-            // DEBUG LOGS
-            System.out.println("DEBUG: Title = " + request.getTitle());
-            System.out.println("DEBUG: UnivName = " + request.getUniversity());
-            System.out.println("DEBUG: Content = " + request.getContent());
+            logger.debug("Ingesting document title={} university={}", request.getTitle(), request.getUniversity());
 
             IngestRequestRecord record = new IngestRequestRecord(
                     request.getTitle(),
@@ -43,6 +43,7 @@ public class IngestServiceImpl extends IngestServiceGrpc.IngestServiceImplBase {
                     .setMessage(msg)
                     .build());
         } catch (Exception e) {
+            logger.warn("Document ingestion failed", e);
             responseObserver.onNext(StatusResponse.newBuilder()
                     .setSuccess(false)
                     .setMessage("Ingestion failed: " + e.getMessage())
@@ -74,6 +75,7 @@ public class IngestServiceImpl extends IngestServiceGrpc.IngestServiceImplBase {
                     .setMessage(service.updateIndex(request.getId(), request.getUpdatedJson()))
                     .build());
         } catch (Exception e) {
+            logger.warn("Index update failed for id {}", request.getId(), e);
             responseObserver.onNext(StatusResponse.newBuilder()
                     .setSuccess(false)
                     .setMessage("Index update failed: " + e.getMessage())
@@ -90,6 +92,7 @@ public class IngestServiceImpl extends IngestServiceGrpc.IngestServiceImplBase {
                     .setMessage(service.deleteFromIndex(request.getId()))
                     .build());
         } catch (Exception e) {
+            logger.warn("Index delete failed for id {}", request.getId(), e);
             responseObserver.onNext(StatusResponse.newBuilder()
                     .setSuccess(false)
                     .setMessage("Index delete failed: " + e.getMessage())
@@ -105,6 +108,7 @@ public class IngestServiceImpl extends IngestServiceGrpc.IngestServiceImplBase {
                     .setMessage(operation.apply(toRecord(request)))
                     .build());
         } catch (Exception e) {
+            logger.warn("Ingest operation failed for title={}", request.getTitle(), e);
             responseObserver.onNext(StatusResponse.newBuilder()
                     .setSuccess(false)
                     .setMessage("Ingestion failed: " + e.getMessage())

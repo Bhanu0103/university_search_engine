@@ -12,11 +12,14 @@ import com.university.grpc.FilterServiceGrpc;
 import com.university.grpc.RefineRequest;
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.server.service.GrpcService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @GrpcService
 public class FilterServiceImpl extends FilterServiceGrpc.FilterServiceImplBase {
+    private static final Logger logger = LoggerFactory.getLogger(FilterServiceImpl.class);
     
     private final FilterService service;
 
@@ -31,7 +34,7 @@ public class FilterServiceImpl extends FilterServiceGrpc.FilterServiceImplBase {
                     service.applyFilters(request.getQuery(), request.getDepartment(), request.getLocation()),
                     responseObserver);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.warn("Apply filters failed for query={}", request.getQuery(), e);
             responseObserver.onNext(FilterResponse.newBuilder().build());
             responseObserver.onCompleted();
         }
@@ -44,7 +47,7 @@ public class FilterServiceImpl extends FilterServiceGrpc.FilterServiceImplBase {
                     .putAllCounts(service.getFacetCounts(request.getQuery(), request.getFacetFieldsList()))
                     .build());
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.warn("Get facet counts failed for query={}", request.getQuery(), e);
             responseObserver.onNext(FacetResponse.newBuilder().build());
         }
         responseObserver.onCompleted();
@@ -55,7 +58,7 @@ public class FilterServiceImpl extends FilterServiceGrpc.FilterServiceImplBase {
         try {
             sendFilterResponse(service.refineSearch(request.getQuery(), request.getRefineToken()), responseObserver);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.warn("Refine search failed for query={}", request.getQuery(), e);
             responseObserver.onNext(FilterResponse.newBuilder().build());
             responseObserver.onCompleted();
         }
@@ -66,7 +69,7 @@ public class FilterServiceImpl extends FilterServiceGrpc.FilterServiceImplBase {
         try {
             sendFilterResponse(service.combineFilters(request.getFilterIdsList()), responseObserver);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.warn("Combine filters failed for filter ids={}", request.getFilterIdsList(), e);
             responseObserver.onNext(FilterResponse.newBuilder().build());
             responseObserver.onCompleted();
         }

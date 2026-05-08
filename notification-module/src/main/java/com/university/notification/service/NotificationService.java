@@ -1,5 +1,7 @@
 package com.university.notification.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,12 +10,11 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class NotificationService {
+    private static final Logger logger = LoggerFactory.getLogger(NotificationService.class);
     private final Map<String, List<String>> notificationsByUser = new ConcurrentHashMap<>();
 
     public void sendAlert(String message) {
-        System.out.println("==========================================");
-        System.out.println("NOTIFICATION ALERT: " + message);
-        System.out.println("==========================================");
+        logger.info("Notification alert: {}", message);
     }
 
     public String logSearchEvent(String userId, String query) {

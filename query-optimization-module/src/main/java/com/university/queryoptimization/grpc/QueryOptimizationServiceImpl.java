@@ -12,10 +12,13 @@ import com.university.grpc.SuggestionResponse;
 import com.university.queryoptimization.service.QueryOptimizationService;
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.server.service.GrpcService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.List;
 
 @GrpcService
 public class QueryOptimizationServiceImpl extends QueryOptimizationServiceGrpc.QueryOptimizationServiceImplBase {
+    private static final Logger logger = LoggerFactory.getLogger(QueryOptimizationServiceImpl.class);
     
     private final QueryOptimizationService service;
 
@@ -34,7 +37,7 @@ public class QueryOptimizationServiceImpl extends QueryOptimizationServiceGrpc.Q
 
             responseObserver.onNext(response);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.warn("Suggest query failed for partialQuery={}", request.getPartialQuery(), e);
         }
         responseObserver.onCompleted();
     }

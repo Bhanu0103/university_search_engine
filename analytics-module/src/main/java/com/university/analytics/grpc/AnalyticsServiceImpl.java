@@ -12,10 +12,13 @@ import com.university.grpc.PopularityRequest;
 import com.university.grpc.PopularityResponse;
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.server.service.GrpcService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.List;
 
 @GrpcService
 public class AnalyticsServiceImpl extends AnalyticsServiceGrpc.AnalyticsServiceImplBase {
+    private static final Logger logger = LoggerFactory.getLogger(AnalyticsServiceImpl.class);
     
     private final AnalyticsService service;
 
@@ -35,7 +38,7 @@ public class AnalyticsServiceImpl extends AnalyticsServiceGrpc.AnalyticsServiceI
 
             responseObserver.onNext(response);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.warn("Get popular queries failed with topN={}", request.getTopN(), e);
         }
         responseObserver.onCompleted();
     }

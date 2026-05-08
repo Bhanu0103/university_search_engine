@@ -24,25 +24,36 @@ public class AbuseDetectionServiceImpl extends AbuseDetectionServiceGrpc.AbuseDe
 
     @Override
     public void detectSearchAbuse(AbuseCheckRequest request, StreamObserver<AbuseCheckResponse> responseObserver) {
-        responseObserver.onNext(AbuseCheckResponse.newBuilder().build());
+        AbuseDetectionService.AbuseDecision decision = service.detectSearchAbuse(request.getUserId(), request.getIpAddress());
+        responseObserver.onNext(AbuseCheckResponse.newBuilder()
+                .setIsAbusive(decision.abusive())
+                .setReason(decision.reason())
+                .build());
         responseObserver.onCompleted();
     }
 
     @Override
     public void analyzeQueryPatterns(PatternRequest request, StreamObserver<PatternResponse> responseObserver) {
-        responseObserver.onNext(PatternResponse.newBuilder().build());
+        responseObserver.onNext(PatternResponse.newBuilder()
+                .setPatternAnalysisJson(service.analyzeQueryPatterns(request.getTimeRange()))
+                .build());
         responseObserver.onCompleted();
     }
 
     @Override
     public void flagSuspiciousUsers(FlagRequest request, StreamObserver<StatusResponse> responseObserver) {
-        responseObserver.onNext(StatusResponse.newBuilder().setSuccess(true).build());
+        responseObserver.onNext(StatusResponse.newBuilder()
+                .setSuccess(true)
+                .setMessage(service.flagSuspiciousUser(request.getUserId(), request.getReason()))
+                .build());
         responseObserver.onCompleted();
     }
 
     @Override
     public void getFraudReports(ReportRequest request, StreamObserver<ReportResponse> responseObserver) {
-        responseObserver.onNext(ReportResponse.newBuilder().build());
+        responseObserver.onNext(ReportResponse.newBuilder()
+                .addAllReports(service.getFraudReports(request.getStartDate(), request.getEndDate()))
+                .build());
         responseObserver.onCompleted();
     }
 }

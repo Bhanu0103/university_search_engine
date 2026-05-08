@@ -3,12 +3,15 @@ package com.university.personalization.service;
 import com.university.document.entity.DocumentEntity;
 import com.university.document.repository.DocumentRepository;
 import com.university.common.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Locale;
 
 @Service
 public class PersonalizationService {
+    private static final Logger logger = LoggerFactory.getLogger(PersonalizationService.class);
     private final DocumentRepository documentRepository;
     private final UserRepository userRepository;
 
@@ -18,7 +21,7 @@ public class PersonalizationService {
     }
 
     public List<DocumentEntity> getPersonalizedResults(String role) {
-        System.out.println("DEBUG: Personalizing results for ROLE: " + role);
+        logger.debug("Personalizing results for role: {}", role);
         
         if ("STUDENT".equalsIgnoreCase(role)) {
             // Students get top ranked universities
@@ -40,7 +43,7 @@ public class PersonalizationService {
         if (clickedDocumentId != null && !clickedDocumentId.isBlank()) {
             findDocument(clickedDocumentId);
         }
-        System.out.println("PERSONALIZATION EVENT user=" + userId + " event=" + eventJson);
+        logger.info("Personalization event tracked for user {}", userId);
         return "Tracked search event for user: " + userId;
     }
 

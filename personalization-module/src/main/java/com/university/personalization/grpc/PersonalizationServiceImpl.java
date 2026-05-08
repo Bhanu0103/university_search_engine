@@ -12,11 +12,14 @@ import com.university.grpc.UserProfileRequest;
 import com.university.personalization.service.PersonalizationService;
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.server.service.GrpcService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @GrpcService
 public class PersonalizationServiceImpl extends PersonalizationServiceGrpc.PersonalizationServiceImplBase {
+    private static final Logger logger = LoggerFactory.getLogger(PersonalizationServiceImpl.class);
     
     private final PersonalizationService service;
 
@@ -46,7 +49,7 @@ public class PersonalizationServiceImpl extends PersonalizationServiceGrpc.Perso
                     .addAllResults(results)
                     .build());
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.warn("Get personalized results failed for userId={}", request.getUserId(), e);
             responseObserver.onNext(RecommendationResponse.newBuilder().build());
         }
         responseObserver.onCompleted();
@@ -69,7 +72,7 @@ public class PersonalizationServiceImpl extends PersonalizationServiceGrpc.Perso
                     .addAllResults(toDocumentResponses(service.recommendContent(request.getUserId())))
                     .build());
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.warn("Recommend content failed for userId={}", request.getUserId(), e);
             responseObserver.onNext(RecommendationResponse.newBuilder().build());
         }
         responseObserver.onCompleted();
@@ -96,6 +99,7 @@ public class PersonalizationServiceImpl extends PersonalizationServiceGrpc.Perso
                     .setMessage(operation.run())
                     .build());
         } catch (Exception e) {
+            logger.warn("Personalization status operation failed", e);
             responseObserver.onNext(StatusResponse.newBuilder()
                     .setSuccess(false)
                     .setMessage(e.getMessage())

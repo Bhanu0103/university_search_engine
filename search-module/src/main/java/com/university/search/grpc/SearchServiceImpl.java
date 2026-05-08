@@ -13,11 +13,14 @@ import com.university.grpc.SearchServiceGrpc;
 import com.university.search.service.SearchService;
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.server.service.GrpcService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @GrpcService
 public class SearchServiceImpl extends SearchServiceGrpc.SearchServiceImplBase {
+    private static final Logger logger = LoggerFactory.getLogger(SearchServiceImpl.class);
     
     private final SearchService service;
 
@@ -31,8 +34,7 @@ public class SearchServiceImpl extends SearchServiceGrpc.SearchServiceImplBase {
             List<DocumentEntity> entities = service.search(request.getQuery());
             sendSearchResponse(entities, responseObserver);
         } catch (Exception e) {
-            System.err.println("Search failed: " + e.getMessage());
-            e.printStackTrace();
+            logger.error("Search failed for query={}", request.getQuery(), e);
             responseObserver.onNext(SearchResponse.newBuilder().build());
             responseObserver.onCompleted();
         }
@@ -74,7 +76,7 @@ public class SearchServiceImpl extends SearchServiceGrpc.SearchServiceImplBase {
             service.getSearchById(request.getId()).map(this::toDocumentResponse).ifPresent(response::setDocument);
             responseObserver.onNext(response.build());
         } catch (Exception e) {
-            System.err.println("Get search by id failed: " + e.getMessage());
+            logger.warn("Get search by id failed for id={}", request.getId(), e);
             responseObserver.onNext(SearchDetailResponse.newBuilder().build());
         }
         responseObserver.onCompleted();
@@ -93,7 +95,7 @@ public class SearchServiceImpl extends SearchServiceGrpc.SearchServiceImplBase {
     }
 
     private void sendEmptySearchResponse(StreamObserver<SearchResponse> responseObserver, Exception e) {
-        System.err.println("Search endpoint failed: " + e.getMessage());
+        logger.warn("Search endpoint failed", e);
         responseObserver.onNext(SearchResponse.newBuilder().build());
         responseObserver.onCompleted();
     }

@@ -8,12 +8,15 @@ import com.university.prediction.dto.PredictRecord;
 import com.university.prediction.dto.PredictionResultDto;
 import com.university.common.repository.UserRepository;
 import com.university.accesscontrol.service.AccesscontrolService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class PredictionService {
+    private static final Logger logger = LoggerFactory.getLogger(PredictionService.class);
     private final PredictionRepository predictionRepository;
     private final UserRepository userRepository;
     private final AccesscontrolService accessControlService;
@@ -41,7 +44,7 @@ public class PredictionService {
             throw new RuntimeException("Access denied: only ADMIN can invoke predictions");
         }
         // In a real system you would run a model here. We'll just echo back the data.
-        System.out.println("Predicting for user " + record.userId() + ": " + record.data());
+        logger.info("Predicting for user {}", record.userId());
         return new PredictionResultDto("Prediction successful for " + record.data());
     }
 
@@ -141,5 +144,5 @@ public class PredictionService {
 //public class PredictionService {
 //    private final PredictionRepository repository;
 //    public PredictionService(PredictionRepository repository) { this.repository = repository; }
-//        public void predict(PredictRecord record) { System.out.println("Predicting " + record.data()); }
+//        public void predict(PredictRecord record) { }
 //}
