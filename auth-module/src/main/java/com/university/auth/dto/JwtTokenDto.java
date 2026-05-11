@@ -1,3 +1,14 @@
 package com.university.auth.dto;
 
-public record JwtTokenDto(String accessToken, String refreshToken, long expiresIn) {}
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
+
+public record JwtTokenDto(
+        @NotBlank(message = "accessToken is required")
+        String accessToken,
+
+        String refreshToken,
+
+        @Positive(message = "expiresIn must be positive")
+        long expiresIn
+) {}

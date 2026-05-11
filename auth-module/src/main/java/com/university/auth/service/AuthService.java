@@ -4,6 +4,7 @@ import com.university.auth.dto.AuthRecord;
 import com.university.auth.dto.RegisterRecord;
 import com.university.common.entity.UserEntity;
 import com.university.common.repository.UserRepository;
+import com.university.common.validation.ValidationSupport;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,7 @@ public class AuthService {
     }
 
     public String authenticate(AuthRecord record) {
+        ValidationSupport.validate(record);
         UserEntity user = userRepository.findByEmail(record.email())
                 .orElseThrow(() -> new RuntimeException("Authentication is failed: User not found with email " + record.email()));
 
@@ -31,6 +33,7 @@ public class AuthService {
     }
 
     public void register(RegisterRecord record) {
+        ValidationSupport.validate(record);
         if (userRepository.findByEmail(record.email()).isPresent()) {
             throw new RuntimeException("Registration failed: Email already exists");
         }

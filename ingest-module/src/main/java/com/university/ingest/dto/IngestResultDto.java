@@ -1,3 +1,12 @@
 package com.university.ingest.dto;
 
-public record IngestResultDto(boolean success, String documentId, String message) {}
+import jakarta.validation.constraints.NotBlank;
+
+public record IngestResultDto(
+        boolean success,
+
+        String documentId,
+
+        @NotBlank(message = "message is required")
+        String message
+) {}

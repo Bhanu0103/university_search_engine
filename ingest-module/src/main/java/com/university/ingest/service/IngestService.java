@@ -2,6 +2,7 @@ package com.university.ingest.service;
 
 import com.university.document.entity.DocumentEntity;
 import com.university.document.repository.DocumentRepository;
+import com.university.common.validation.ValidationSupport;
 import com.university.ingest.dto.IngestRequestRecord;
 import com.university.notification.service.NotificationService;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -22,6 +23,7 @@ public class IngestService {
 
     @Transactional
     public String ingest(IngestRequestRecord record) {
+        ValidationSupport.validate(record);
         DocumentEntity document = new DocumentEntity();
         document.setTitle(record.title());
         document.setUniversityName(record.universityName());

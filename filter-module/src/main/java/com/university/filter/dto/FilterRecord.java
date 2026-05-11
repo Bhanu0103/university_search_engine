@@ -1,3 +1,11 @@
 package com.university.filter.dto;
 
-public record FilterRecord(String field, String value) {}
+import jakarta.validation.constraints.NotBlank;
+
+public record FilterRecord(
+        @NotBlank(message = "field is required")
+        String field,
+
+        @NotBlank(message = "value is required")
+        String value
+) {}

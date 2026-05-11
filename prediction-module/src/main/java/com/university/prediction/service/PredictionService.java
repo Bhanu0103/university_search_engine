@@ -7,6 +7,7 @@ import com.university.prediction.repository.PredictionRepository;
 import com.university.prediction.dto.PredictRecord;
 import com.university.prediction.dto.PredictionResultDto;
 import com.university.common.repository.UserRepository;
+import com.university.common.validation.ValidationSupport;
 import com.university.accesscontrol.service.AccesscontrolService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +40,7 @@ public class PredictionService {
      * Simple prediction stub – only users with ADMIN role are allowed.
      */
     public PredictionResultDto predict(PredictRecord record) {
+        ValidationSupport.validate(record);
         var userOpt = userRepository.findById(Long.valueOf(record.userId()));
         if (userOpt.isEmpty() || !userOpt.get().getRole().name().equalsIgnoreCase("ADMIN")) {
             throw new RuntimeException("Access denied: only ADMIN can invoke predictions");

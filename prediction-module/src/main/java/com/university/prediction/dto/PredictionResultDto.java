@@ -1,3 +1,8 @@
 package com.university.prediction.dto;
 
-public record PredictionResultDto(String message) {}
+import jakarta.validation.constraints.NotBlank;
+
+public record PredictionResultDto(
+        @NotBlank(message = "message is required")
+        String message
+) {}

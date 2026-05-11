@@ -1,3 +1,8 @@
 package com.university.queryoptimization.dto;
 
-public record QueryRecord(String raw) {}
+import jakarta.validation.constraints.NotBlank;
+
+public record QueryRecord(
+        @NotBlank(message = "raw query is required")
+        String raw
+) {}

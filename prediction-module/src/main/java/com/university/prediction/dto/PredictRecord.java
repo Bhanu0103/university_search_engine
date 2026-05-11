@@ -1,3 +1,11 @@
 package com.university.prediction.dto;
 
-public record PredictRecord(String userId, String data) {}
+import jakarta.validation.constraints.NotBlank;
+
+public record PredictRecord(
+        @NotBlank(message = "userId is required")
+        String userId,
+
+        @NotBlank(message = "data is required")
+        String data
+) {}

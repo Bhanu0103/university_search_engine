@@ -2,6 +2,7 @@ package com.university.accesscontrol.service;
 import com.university.accesscontrol.repository.AccesscontrolRepository;
 import com.university.accesscontrol.entity.AccesscontrolEntity;
 import com.university.accesscontrol.dto.*;
+import com.university.common.validation.ValidationSupport;
 import org.springframework.stereotype.Service;
 @Service
 public class AccesscontrolService {
@@ -13,6 +14,7 @@ public class AccesscontrolService {
     }
         // Define a new access policy
         public com.university.accesscontrol.dto.AccessPolicyDto defineAccessPolicy(com.university.accesscontrol.dto.PolicyRecord record) {
+            ValidationSupport.validate(record);
             // For simplicity, store role and allowedResources as a JSON string in AccesscontrolEntity
             com.university.accesscontrol.entity.AccesscontrolEntity entity = new com.university.accesscontrol.entity.AccesscontrolEntity();
             entity.setName(record.role()); // role name
@@ -24,6 +26,7 @@ public class AccesscontrolService {
 
         // Assign permissions (roles) to a user
         public void assignPermissions(com.university.accesscontrol.dto.AccessRequestDto request) {
+            ValidationSupport.validate(request);
             var userOpt = userRepository.findById(Long.valueOf(request.userId()));
             if (userOpt.isEmpty()) {
                 throw new RuntimeException("User not found: " + request.userId());
@@ -36,6 +39,7 @@ public class AccesscontrolService {
 
         // Validate that a user has permission to access a resource for an action
         public boolean validateAccess(com.university.accesscontrol.dto.AccessRequestDto request) {
+            ValidationSupport.validate(request);
             var userOpt = userRepository.findById(Long.valueOf(request.userId()));
             if (userOpt.isEmpty()) return false;
             var user = userOpt.get();
@@ -55,6 +59,7 @@ public class AccesscontrolService {
 
         // Revoke a role from a user (set to STUDENT by default)
         public void revokeAccess(com.university.accesscontrol.dto.AccessRequestDto request) {
+            ValidationSupport.validate(request);
             var userOpt = userRepository.findById(Long.valueOf(request.userId()));
             if (userOpt.isPresent()) {
                 var user = userOpt.get();
