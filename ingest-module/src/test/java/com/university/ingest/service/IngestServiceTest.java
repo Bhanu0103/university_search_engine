@@ -20,7 +20,7 @@ class IngestServiceTest {
 
     @Test
     void ingestSavesDocumentAndSendsNotification() {
-        IngestRequestRecord record = record(null);
+        IngestRequestRecord record = record("General");
 
         String result = service.ingest(record);
 
