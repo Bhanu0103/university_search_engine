@@ -2,6 +2,8 @@ package com.university.ingest.service;
 
 import com.university.document.entity.DocumentEntity;
 import com.university.document.repository.DocumentRepository;
+import com.university.common.exception.BadRequestException;
+import com.university.common.exception.ResourceNotFoundException;
 import com.university.common.validation.ValidationSupport;
 import com.university.ingest.dto.IngestRequestRecord;
 import com.university.notification.service.NotificationService;
@@ -55,11 +57,11 @@ public class IngestService {
     @Transactional
     public String updateIndex(String id, String updatedJson) throws Exception {
         if (updatedJson == null || updatedJson.isBlank()) {
-            throw new IllegalArgumentException("updatedJson is required");
+            throw new BadRequestException("updatedJson is required");
         }
 
         DocumentEntity document = documentRepository.findById(Long.parseLong(id))
-                .orElseThrow(() -> new IllegalArgumentException("Document not found: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Document", id));
 
         JsonNode json = objectMapper.readTree(updatedJson);
         if (json.hasNonNull("title")) {
@@ -92,7 +94,7 @@ public class IngestService {
     public String deleteFromIndex(String id) {
         Long documentId = Long.parseLong(id);
         if (!documentRepository.existsById(documentId)) {
-            throw new IllegalArgumentException("Document not found: " + id);
+            throw new ResourceNotFoundException("Document", id);
         }
 
         documentRepository.deleteById(documentId);

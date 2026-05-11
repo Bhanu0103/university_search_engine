@@ -6,6 +6,7 @@ import com.university.accesscontrol.entity.AccesscontrolEntity;
 import com.university.accesscontrol.repository.AccesscontrolRepository;
 import com.university.common.entity.UserEntity;
 import com.university.common.enums.Role;
+import com.university.common.exception.ResourceNotFoundException;
 import com.university.common.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import java.util.List;
@@ -49,7 +50,7 @@ class AccesscontrolServiceTest {
         when(userRepository.findById(42L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> service.assignPermissions(new AccessRequestDto("42", "ADMIN", null)))
-                .isInstanceOf(RuntimeException.class)
+                .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessageContaining("User not found");
     }
 }

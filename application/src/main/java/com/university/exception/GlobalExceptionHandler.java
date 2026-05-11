@@ -1,5 +1,11 @@
 package com.university.exception;
 
+import com.university.common.exception.AccessDeniedException;
+import com.university.common.exception.AuthenticationFailedException;
+import com.university.common.exception.BadRequestException;
+import com.university.common.exception.DuplicateResourceException;
+import com.university.common.exception.ResourceNotFoundException;
+import com.university.common.exception.UniversitySearchException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +35,36 @@ public class GlobalExceptionHandler {
                 errors.put(violation.getPropertyPath().toString(), violation.getMessage()));
 
         return build(HttpStatus.BAD_REQUEST, "Validation failed", errors);
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ApiErrorResponse> handleBadRequest(BadRequestException exception) {
+        return build(HttpStatus.BAD_REQUEST, exception.getMessage(), Map.of());
+    }
+
+    @ExceptionHandler(AuthenticationFailedException.class)
+    public ResponseEntity<ApiErrorResponse> handleAuthenticationFailed(AuthenticationFailedException exception) {
+        return build(HttpStatus.UNAUTHORIZED, exception.getMessage(), Map.of());
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ApiErrorResponse> handleAccessDenied(AccessDeniedException exception) {
+        return build(HttpStatus.FORBIDDEN, exception.getMessage(), Map.of());
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleResourceNotFound(ResourceNotFoundException exception) {
+        return build(HttpStatus.NOT_FOUND, exception.getMessage(), Map.of());
+    }
+
+    @ExceptionHandler(DuplicateResourceException.class)
+    public ResponseEntity<ApiErrorResponse> handleDuplicateResource(DuplicateResourceException exception) {
+        return build(HttpStatus.CONFLICT, exception.getMessage(), Map.of());
+    }
+
+    @ExceptionHandler(UniversitySearchException.class)
+    public ResponseEntity<ApiErrorResponse> handleUniversitySearchException(UniversitySearchException exception) {
+        return build(HttpStatus.BAD_REQUEST, exception.getMessage(), Map.of());
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

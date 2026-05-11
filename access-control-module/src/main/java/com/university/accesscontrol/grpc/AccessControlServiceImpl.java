@@ -3,6 +3,7 @@ package com.university.accesscontrol.grpc;
 import com.university.accesscontrol.dto.AccessRequestDto;
 import com.university.accesscontrol.dto.PolicyRecord;
 import com.university.accesscontrol.service.AccesscontrolService;
+import com.university.common.exception.BadRequestException;
 import com.university.grpc.AccessValidationRequest;
 import com.university.grpc.AccessValidationResponse;
 import com.university.grpc.PermissionRequest;
@@ -33,7 +34,7 @@ public class AccessControlServiceImpl extends com.university.grpc.AccessControlS
 
             List<String> roles = role.isBlank() ? readArray(request.getPolicyJson(), "roles") : List.of(role);
             if (roles.isEmpty()) {
-                throw new IllegalArgumentException("Policy must include role or roles");
+                throw new BadRequestException("Policy must include role or roles");
             }
             for (String policyRole : roles) {
                 service.defineAccessPolicy(new PolicyRecord(policyRole, resources));
@@ -48,7 +49,7 @@ public class AccessControlServiceImpl extends com.university.grpc.AccessControlS
     public void assignPermissions(PermissionRequest request, StreamObserver<StatusResponse> responseObserver) {
         try {
             if (request.getRolesList().isEmpty()) {
-                throw new IllegalArgumentException("At least one role is required");
+                throw new BadRequestException("At least one role is required");
             }
             service.assignPermissions(new AccessRequestDto(request.getUserId(), request.getRoles(0), ""));
             sendStatus(responseObserver, true, "Assigned role " + request.getRoles(0) + " to user " + request.getUserId());

@@ -2,6 +2,7 @@ package com.university.auth.service;
 
 import com.university.auth.dto.AuthRecord;
 import com.university.auth.dto.RegisterRecord;
+import com.university.common.exception.DuplicateResourceException;
 import com.university.common.entity.UserEntity;
 import com.university.common.enums.Role;
 import com.university.common.repository.UserRepository;
@@ -49,7 +50,7 @@ class AuthServiceTest {
         when(userRepository.findByEmail("student@example.com")).thenReturn(Optional.of(new UserEntity()));
 
         assertThatThrownBy(() -> service.register(new RegisterRecord("student", "secret", "student@example.com", Role.STUDENT)))
-                .isInstanceOf(RuntimeException.class)
-                .hasMessageContaining("Email already exists");
+                .isInstanceOf(DuplicateResourceException.class)
+                .hasMessageContaining("email already exists");
     }
 }

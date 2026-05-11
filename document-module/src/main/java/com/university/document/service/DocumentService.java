@@ -1,5 +1,7 @@
 package com.university.document.service;
 
+import com.university.common.exception.BadRequestException;
+import com.university.common.exception.ResourceNotFoundException;
 import com.university.document.entity.DocumentEntity;
 import com.university.document.repository.DocumentRepository;
 import org.springframework.stereotype.Service;
@@ -79,7 +81,7 @@ public class DocumentService {
     public com.university.document.dto.DocRecord getDocumentDetails(Long id) {
         var opt = documentRepository.findById(id);
         if (opt.isEmpty()) {
-            throw new RuntimeException("Document not found: " + id);
+            throw new ResourceNotFoundException("Document", String.valueOf(id));
         }
         var entity = opt.get();
         // For demo, we return the id and title as metadata string
@@ -89,9 +91,9 @@ public class DocumentService {
     private DocumentEntity findExisting(String documentId) {
         try {
             return documentRepository.findById(Long.parseLong(documentId))
-                    .orElseThrow(() -> new IllegalArgumentException("Document not found: " + documentId));
+                    .orElseThrow(() -> new ResourceNotFoundException("Document", documentId));
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Invalid document id: " + documentId);
+            throw new BadRequestException("Invalid document id: " + documentId);
         }
     }
 

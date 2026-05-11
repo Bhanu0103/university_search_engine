@@ -2,6 +2,9 @@ package com.university.auth.service;
 
 import com.university.auth.dto.AuthRecord;
 import com.university.auth.dto.RegisterRecord;
+import com.university.common.exception.AuthenticationFailedException;
+import com.university.common.exception.DuplicateResourceException;
+import com.university.common.exception.ResourceNotFoundException;
 import com.university.common.entity.UserEntity;
 import com.university.common.repository.UserRepository;
 import com.university.common.validation.ValidationSupport;
@@ -23,22 +26,22 @@ public class AuthService {
     public String authenticate(AuthRecord record) {
         ValidationSupport.validate(record);
         UserEntity user = userRepository.findByEmail(record.email())
-                .orElseThrow(() -> new RuntimeException("Authentication is failed: User not found with email " + record.email()));
+                .orElseThrow(() -> new AuthenticationFailedException("Authentication failed: user not found with email " + record.email()));
 
         if (passwordEncoder.matches(record.password(), user.getPassword())) {
             return jwtService.generateToken(user.getEmail());
         }
         
-        throw new RuntimeException("Authentication failed: Invalid password");
+        throw new AuthenticationFailedException("Authentication failed: invalid password");
     }
 
     public void register(RegisterRecord record) {
         ValidationSupport.validate(record);
         if (userRepository.findByEmail(record.email()).isPresent()) {
-            throw new RuntimeException("Registration failed: Email already exists");
+            throw new DuplicateResourceException("Registration failed: email already exists");
         }
         if (userRepository.findByUsername(record.username()).isPresent()) {
-            throw new RuntimeException("Registration failed: Username already exists");
+            throw new DuplicateResourceException("Registration failed: username already exists");
         }
 
         UserEntity user = new UserEntity();
@@ -57,6 +60,6 @@ public class AuthService {
     public UserEntity getUserFromToken(String token) {
         String email = jwtService.getUsernameFromToken(token);
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found for token"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found for token"));
     }
 }

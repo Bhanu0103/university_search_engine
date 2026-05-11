@@ -2,6 +2,7 @@ package com.university.personalization.service;
 
 import com.university.common.entity.UserEntity;
 import com.university.common.enums.Role;
+import com.university.common.exception.ResourceNotFoundException;
 import com.university.common.repository.UserRepository;
 import com.university.document.entity.DocumentEntity;
 import com.university.document.repository.DocumentRepository;
@@ -44,7 +45,7 @@ class PersonalizationServiceTest {
         when(documentRepository.findById(9L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> service.trackUserSearch("1", "{\"clickedDocumentId\":\"9\"}"))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessageContaining("Document not found");
     }
 

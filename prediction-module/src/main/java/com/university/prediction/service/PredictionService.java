@@ -6,6 +6,7 @@ import com.university.document.repository.DocumentRepository;
 import com.university.prediction.repository.PredictionRepository;
 import com.university.prediction.dto.PredictRecord;
 import com.university.prediction.dto.PredictionResultDto;
+import com.university.common.exception.AccessDeniedException;
 import com.university.common.repository.UserRepository;
 import com.university.common.validation.ValidationSupport;
 import com.university.accesscontrol.service.AccesscontrolService;
@@ -43,7 +44,7 @@ public class PredictionService {
         ValidationSupport.validate(record);
         var userOpt = userRepository.findById(Long.valueOf(record.userId()));
         if (userOpt.isEmpty() || !userOpt.get().getRole().name().equalsIgnoreCase("ADMIN")) {
-            throw new RuntimeException("Access denied: only ADMIN can invoke predictions");
+            throw new AccessDeniedException("Access denied: only ADMIN can invoke predictions");
         }
         // In a real system you would run a model here. We'll just echo back the data.
         logger.info("Predicting for user {}", record.userId());

@@ -1,5 +1,7 @@
 package com.university.personalization.service;
 
+import com.university.common.exception.BadRequestException;
+import com.university.common.exception.ResourceNotFoundException;
 import com.university.document.entity.DocumentEntity;
 import com.university.document.repository.DocumentRepository;
 import com.university.common.repository.UserRepository;
@@ -71,18 +73,18 @@ public class PersonalizationService {
     private com.university.common.entity.UserEntity validateUser(String userId) {
         try {
             return userRepository.findById(Long.parseLong(userId))
-                    .orElseThrow(() -> new IllegalArgumentException("User not found: " + userId));
+                    .orElseThrow(() -> new ResourceNotFoundException("User", userId));
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Invalid user id: " + userId);
+            throw new BadRequestException("Invalid user id: " + userId);
         }
     }
 
     private DocumentEntity findDocument(String documentId) {
         try {
             return documentRepository.findById(Long.parseLong(documentId))
-                    .orElseThrow(() -> new IllegalArgumentException("Document not found: " + documentId));
+                    .orElseThrow(() -> new ResourceNotFoundException("Document", documentId));
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Invalid document id: " + documentId);
+            throw new BadRequestException("Invalid document id: " + documentId);
         }
     }
 

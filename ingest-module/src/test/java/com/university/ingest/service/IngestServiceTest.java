@@ -1,5 +1,6 @@
 package com.university.ingest.service;
 
+import com.university.common.exception.ResourceNotFoundException;
 import com.university.document.entity.DocumentEntity;
 import com.university.document.repository.DocumentRepository;
 import com.university.ingest.dto.IngestRequestRecord;
@@ -57,7 +58,7 @@ class IngestServiceTest {
         when(documentRepository.existsById(7L)).thenReturn(false);
 
         assertThatThrownBy(() -> service.deleteFromIndex("7"))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessageContaining("Document not found");
     }
 

@@ -2,6 +2,7 @@ package com.university.accesscontrol.service;
 import com.university.accesscontrol.repository.AccesscontrolRepository;
 import com.university.accesscontrol.entity.AccesscontrolEntity;
 import com.university.accesscontrol.dto.*;
+import com.university.common.exception.ResourceNotFoundException;
 import com.university.common.validation.ValidationSupport;
 import org.springframework.stereotype.Service;
 @Service
@@ -29,7 +30,7 @@ public class AccesscontrolService {
             ValidationSupport.validate(request);
             var userOpt = userRepository.findById(Long.valueOf(request.userId()));
             if (userOpt.isEmpty()) {
-                throw new RuntimeException("User not found: " + request.userId());
+                throw new ResourceNotFoundException("User", request.userId());
             }
             var user = userOpt.get();
             // Simple role assignment – override existing role

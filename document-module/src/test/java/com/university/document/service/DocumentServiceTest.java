@@ -1,5 +1,6 @@
 package com.university.document.service;
 
+import com.university.common.exception.ResourceNotFoundException;
 import com.university.document.entity.DocumentEntity;
 import com.university.document.repository.DocumentRepository;
 import org.junit.jupiter.api.Test;
@@ -60,7 +61,7 @@ class DocumentServiceTest {
         when(documentRepository.findById(99L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> service.getDocumentDetails(99L))
-                .isInstanceOf(RuntimeException.class)
+                .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessageContaining("Document not found");
     }
 }

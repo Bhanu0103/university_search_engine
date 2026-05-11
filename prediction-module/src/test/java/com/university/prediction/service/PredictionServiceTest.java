@@ -5,6 +5,7 @@ import com.university.analytics.entity.AnalyticsEntity;
 import com.university.analytics.repository.AnalyticsRepository;
 import com.university.common.entity.UserEntity;
 import com.university.common.enums.Role;
+import com.university.common.exception.AccessDeniedException;
 import com.university.common.repository.UserRepository;
 import com.university.document.entity.DocumentEntity;
 import com.university.document.repository.DocumentRepository;
@@ -58,7 +59,7 @@ class PredictionServiceTest {
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
 
         assertThatThrownBy(() -> service.predict(new PredictRecord("1", "data")))
-                .isInstanceOf(RuntimeException.class)
+                .isInstanceOf(AccessDeniedException.class)
                 .hasMessageContaining("Access denied");
     }
 }
